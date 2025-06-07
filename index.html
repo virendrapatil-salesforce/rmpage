@@ -1,28 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>RM Dashboard</title>
+  <meta charset="UTF-8">
+  <title>RM Page</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    #welcome { display: none; }
+    .hidden { display: none; }
+    input, select, button { padding: 10px; margin: 10px; font-size: 1em; }
   </style>
 </head>
 <body>
 
-  <h2>Waiting for customer consent...</h2>
-  <div id="welcome">
+  <h2 id="waitingMessage">Waiting for customer consent...</h2>
+
+  <!-- Dummy Offer Form (Initially hidden) -->
+  <div id="offerForm" class="hidden">
     <h2>Welcome!</h2>
-    <p>You may now continue the application for your customer.</p>
+    <p>Proceed with the customer application</p>
+
+    <form>
+      <label>Product Offer:</label><br/>
+      <select>
+        <option>Home Loan - 8.5%</option>
+        <option>Personal Loan - 10.9%</option>
+        <option>Car Loan - 9.2%</option>
+      </select><br/>
+
+      <label>Loan Amount:</label><br/>
+      <input type="number" placeholder="Enter Amount (₹)" /><br/>
+
+      <button type="submit">Submit Application</button>
+    </form>
   </div>
 
   <script>
     const socket = new WebSocket("ws://localhost:3000");
 
+    socket.onopen = () => console.log("✅ WebSocket connected (RM)");
+
     socket.onmessage = function(event) {
+      console.log("📨 Received:", event.data);
       const msg = JSON.parse(event.data);
+
       if (msg.type === "CONSENT_GIVEN") {
-        document.querySelector("h2").style.display = "none";
-        document.getElementById("welcome").style.display = "block";
+        // Hide waiting message and show offer form
+        document.getElementById("waitingMessage").classList.add("hidden");
+        document.getElementById("offerForm").classList.remove("hidden");
       }
     };
   </script>
