@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RM Dashboard</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #welcome { display: none; }
+  </style>
+</head>
+<body>
+
+  <h2>Waiting for customer consent...</h2>
+  <div id="welcome">
+    <h2>Welcome!</h2>
+    <p>You may now continue the application for your customer.</p>
+  </div>
+
+  <script>
+    const socket = new WebSocket("wss://your-socket-server.com");
+
+    socket.onmessage = function(event) {
+      const msg = JSON.parse(event.data);
+      if (msg.type === "CONSENT_GIVEN") {
+        document.querySelector("h2").style.display = "none";
+        document.getElementById("welcome").style.display = "block";
+      }
+    };
+  </script>
+
+</body>
+</html>
