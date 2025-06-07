@@ -16,7 +16,7 @@
   </div>
 
   <script>
-    const socket = new WebSocket("wss://your-socket-server.com");
+    const socket = new WebSocket("ws://localhost:3000");
 
     socket.onmessage = function(event) {
       const msg = JSON.parse(event.data);
